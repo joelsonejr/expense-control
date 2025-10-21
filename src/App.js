@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Form from "./components/Form";
+import ExpenseList from "./components/ExpenseList";
+import { useState } from "react";
+import userList from "./data/userList";
+import TotalDisplay from "./components/TotalDisplay";
 
 function App() {
+  const [userExpenses, setUserExpenses] = useState([]);
+
+  const handleAddExpense = (newExpense) => {
+    setUserExpenses((expenses) => [...expenses, newExpense]);
+  };
+
+  const resetExpenseList = (e) => {
+    e.preventDefault();
+
+    setUserExpenses([]);
+  };
+
+  const removeLastExpenseAddition = (id) => {
+    let updatedList = userExpenses.filter((exp) => exp.id !== id);
+
+    setUserExpenses(updatedList);
+  };
+
+  const isResetEnabled = userExpenses.length > 0;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="">
+      <h1>Controle de Despesas</h1>
+      <Form
+        users={userList}
+        onAddExpense={handleAddExpense}
+        onResetExpenses={resetExpenseList}
+        isResetEnabled={isResetEnabled}
+      />
+      <ExpenseList expenses={userExpenses} onUndo={removeLastExpenseAddition} />
+      <TotalDisplay values={userExpenses} />
     </div>
   );
 }
